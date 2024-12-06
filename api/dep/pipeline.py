@@ -85,7 +85,7 @@ async def get_pipeline_info(pipeline_id: int, db: AsyncSession):
                 "created_at": result.created_at.replace(tzinfo=pytz.UTC)
                 .astimezone(pytz.timezone("Asia/Seoul"))
                 .strftime("%Y-%m-%d %H:%M:%S"),
-                "ligand": Path(result.ligand).stem,
+                "ligand": "",
                 "receptor": Path(result.receptor).stem,
                 "method_id": method_option,
                 "batch_size": result.batch_size,

@@ -17,7 +17,7 @@ class PipelineItem(Base):
     created_at = Column(
         "created_at", DateTime, server_default=func.now(), nullable=False
     )
-    ligand = Column("ligand", String(250), server_default=text("'none'"))
+    # ligand = Column("ligand", String(250), server_default=text("'none'"))
     receptor = Column("receptor", String(250), server_default=text("'none'"))
     dir_name = Column("dir_name", String(250), unique=True)
     status = Column("status", String)

@@ -31,6 +31,7 @@ async def run_pipeline(
     bgtask: BackgroundTasks,
     # fasta: Optional[UploadFile] = File(None),
     # sequence: str = Form(...),
+    class_id: str = Form(None), 
     pdb: Optional[UploadFile] = File(None),
     length: str = Form(...),
     max_iter: str = Form(...),
