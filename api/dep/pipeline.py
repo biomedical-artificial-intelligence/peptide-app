@@ -30,7 +30,11 @@ async def get_pipeline_items(db: AsyncSession):
                     "created_at": pipeline.created_at.replace(tzinfo=pytz.UTC)
                     .astimezone(pytz.timezone("Asia/Seoul"))
                     .strftime("%Y-%m-%d %H:%M:%S"),
+<<<<<<< HEAD
                     "status": pipeline.status
+=======
+                    "status": pipeline.status,
+>>>>>>> e2c2703 (update)
                 }
                 for pipeline in pipeline_list["result"]
             ],
@@ -40,6 +44,7 @@ async def get_pipeline_items(db: AsyncSession):
 
 
 async def init_new_pipeline(
+<<<<<<< HEAD
     # sequence: str = Form(...),
     pdb_name: str,
     length: str,
@@ -61,6 +66,38 @@ async def init_new_pipeline(
         receptor=pdb_name if pdb_name != None else "none",
         status="working...",
     )
+=======
+    db: AsyncSession,
+    class_id: int | None = None,
+    pdb_name: str | None = None,
+    length: str | None = None,
+    max_iter: str | None = None,
+    method: str | None = None,
+    gpu: str | None = None,
+    alpha: float | None = None,
+    batch_size: str | None = None,
+    heavy: str | None = None,
+    light: str | None = None,
+    antigen: str | None = None,
+    name: str | None = None,
+):
+    if class_id == 1:
+        item_input = PipelineItem(
+            class_id=class_id,
+            length=int(length),
+            method_id=int(method),
+            max_iter=int(max_iter),
+            alpha=float(alpha),
+            gpu=bool(gpu),
+            batch_size=int(batch_size),
+            receptor=pdb_name if pdb_name != None else "none",
+            status="working...",
+        )
+    elif class_id == 2:
+        item_input = PipelineItem(
+            class_id=class_id, heavy=heavy, light=light, antigen=antigen, name=name
+        )
+>>>>>>> e2c2703 (update)
     return await crud_pipeline.create_item(db=db, item=item_input)
 
 
@@ -153,7 +190,19 @@ async def run_pipeline_loop(
     dclient = DockModelClient(durl)
 
     pipeline_id = await init_new_pipeline(
+<<<<<<< HEAD
         pdb_name, length, max_iter, method, gpu, alpha, batch_size, db
+=======
+        class_id=1,
+        pdb_name=pdb_name,
+        length=length,
+        max_iter=max_iter,
+        method=method,
+        gpu=gpu,
+        alpha=alpha,
+        batch_size=batch_size,
+        db=db,
+>>>>>>> e2c2703 (update)
     )
     dir_name = await check_dir_name(pipeline_id, db)
     status_new = await dep_status.init_status(pipeline_id, db)
@@ -231,5 +280,34 @@ async def run_pipeline_loop(
     return await get_pipeline_info(pipeline_id, db)
 
 
+<<<<<<< HEAD
+=======
+async def concat_minibody(
+    heavy: str,
+    light: str,
+    antigen: str,
+    name: str,
+    db: AsyncSession,
+):
+    fclient = FoldModelClient(furl)
+
+    pipeline_id = await init_new_pipeline(
+        class_id=2, heavy=heavy, light=light, antigen=antigen, name=name, db=db
+    )
+
+    dir_name = await check_dir_name(pipeline_id, db)
+
+    await fclient.start_multi(
+        {
+            "pipeline_id": pipeline_id,
+            "heavy": heavy,
+            "light": light,
+            "antigen": antigen,
+            "dir_name": dir_name,
+        }
+    )
+
+
+>>>>>>> e2c2703 (update)
 async def finish_pipeline_loop(pipeline_id: int, db: AsyncSession):
     return await crud_pipeline.finish_item(pipeline_id, db)

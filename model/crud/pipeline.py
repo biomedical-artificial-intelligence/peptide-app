@@ -63,6 +63,7 @@ async def check_directory_name(pipeline_id: int, db: AsyncSession):
 
 
 async def create_new_directory(pipeline_id: int, db: AsyncSession):
+<<<<<<< HEAD
     result = await db.execute(
         select(PipelineItem.receptor).where(PipelineItem.id == pipeline_id)
     )
@@ -83,6 +84,54 @@ async def create_new_directory(pipeline_id: int, db: AsyncSession):
         .where(PipelineItem.id == pipeline_id)
         .values(dir_name=NEW_DIR)
     )
+=======
+    result_class = await db.execute(
+        select(PipelineItem.class_id).where(PipelineItem.id == pipeline_id)
+    )
+    class_id = result_class.scalar_one_or_none()
+    if class_id == 1:
+        result = await db.execute(
+            select(PipelineItem.receptor).where(PipelineItem.id == pipeline_id)
+        )
+        pdb = result.scalar_one_or_none()
+        result = await db.execute(select(PipelineItem.dir_name))
+        ALL_DIR = result.scalars().all()
+        unq = 1
+        NEW_DIR = "{}-{}".format(Path(pdb).stem, str(unq).zfill(3))
+
+        while NEW_DIR in ALL_DIR:
+            unq += 1
+            NEW_DIR = "{}-{}".format(Path(pdb).stem, str(unq).zfill(3))
+            result = await db.execute(select(PipelineItem.dir_name))
+            ALL_DIR = result.scalars().all()
+
+        result = await db.execute(
+            update(PipelineItem)
+            .where(PipelineItem.id == pipeline_id)
+            .values(dir_name=NEW_DIR)
+        )
+    elif class_id == 2:
+        result = await db.execute(
+            select(PipelineItem.name).where(PipelineItem.id == pipeline_id)
+        )
+        name = result.scalar_one_or_none()
+        unq = 1
+        NEW_DIR = "{}-{}".format(Path(name).stem, str(unq).zfill(3))
+        result = await db.execute(select(PipelineItem.dir_name))
+        ALL_DIR = result.scalars().all()
+
+        while NEW_DIR in ALL_DIR:
+            unq += 1
+            NEW_DIR = "{}-{}".format(Path(name).stem, str(unq).zfill(3))
+            result = await db.execute(select(PipelineItem.dir_name))
+            ALL_DIR = result.scalars().all()
+
+        result = await db.execute(
+            update(PipelineItem)
+            .where(PipelineItem.id == pipeline_id)
+            .values(dir_name=NEW_DIR)
+        )
+>>>>>>> e2c2703 (update)
     await db.commit()
     return NEW_DIR
 
@@ -96,9 +145,13 @@ async def get_max_iter(pipeline_id: int, db: AsyncSession):
 
 async def finish_item(pipeline_id: int, db: AsyncSession):
     result = await db.execute(
+<<<<<<< HEAD
         update(PipelineItem)
         .where(PipelineItem.id == pipeline_id)
         .values(status="DONE")
+=======
+        update(PipelineItem).where(PipelineItem.id == pipeline_id).values(status="DONE")
+>>>>>>> e2c2703 (update)
     )
     await db.commit()
     return

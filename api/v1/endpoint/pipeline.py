@@ -31,6 +31,7 @@ async def run_pipeline(
     bgtask: BackgroundTasks,
     # fasta: Optional[UploadFile] = File(None),
     # sequence: str = Form(...),
+<<<<<<< HEAD
     class_id: str = Form(None), 
     pdb: Optional[UploadFile] = File(None),
     length: str = Form(...),
@@ -59,6 +60,54 @@ async def run_pipeline(
             "message": "Pipeline Started for {} iteration".format(max_iter),
             "success": "ok",
         }
+=======
+    class_id: Optional[str] = Form(None),
+    pdb: Optional[UploadFile] = File(None),
+    length: Optional[str] = Form(None),
+    max_iter: Optional[str] = Form(None),
+    method: Optional[str] = Form(None),
+    gpu: Optional[str] = Form(None),
+    alpha: Optional[str] = Form(None),
+    batch_size: Optional[str] = Form(None),
+    name: Optional[str] = Form(None),
+    heavy: Optional[str] = Form(None),
+    light: Optional[str] = Form(None),
+    antigen: Optional[str] = Form(None),
+    db: AsyncSession = Depends(get_db),
+):
+    try:
+        if class_id == None or class_id == '1':
+            pdb_content = await pdb.read()
+            bgtask.add_task(
+                dep_pipeline.run_pipeline_loop,
+                pdb.filename,
+                pdb_content,
+                length,
+                max_iter,
+                method,
+                gpu,
+                alpha,
+                batch_size,
+                db,
+            )
+            return {
+                "message": "Pipeline Started for {} iteration".format(max_iter),
+                "success": "ok",
+            }
+        elif class_id == '2':
+            bgtask.add_task(
+                dep_pipeline.concat_minibody,
+                heavy,
+                light,
+                antigen,
+                name,
+                db,
+            )
+            return {
+                "message": "Pipeline Started Multimer",
+                "success": "ok",
+            }
+>>>>>>> e2c2703 (update)
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e)) from e
