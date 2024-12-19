@@ -45,15 +45,12 @@ class FoldModelClient:
         response = await self.client.post(f"{self.base_url}/fold/start", json=data)
         return response.json()
 
-<<<<<<< HEAD
-=======
     async def start_multi(self, data: dict):
         response = await self.client.post(
             f"{self.base_url}/fold/start-multi", json=data
         )
         return response.json()
 
->>>>>>> e2c2703 (update)
     async def update(self, data: dict):
         response = await self.client.post(
             "{}/pipeline/update".format(self.base_url), json=data

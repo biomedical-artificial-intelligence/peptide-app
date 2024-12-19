@@ -31,36 +31,6 @@ async def run_pipeline(
     bgtask: BackgroundTasks,
     # fasta: Optional[UploadFile] = File(None),
     # sequence: str = Form(...),
-<<<<<<< HEAD
-    class_id: str = Form(None), 
-    pdb: Optional[UploadFile] = File(None),
-    length: str = Form(...),
-    max_iter: str = Form(...),
-    method: str = Form(...),
-    gpu: str = Form(...),
-    alpha: float = Form(...),
-    batch_size: str = Form(...),
-    db: AsyncSession = Depends(get_db),
-):
-    try:
-        pdb_content = await pdb.read()
-        bgtask.add_task(
-            dep_pipeline.run_pipeline_loop,
-            pdb.filename,
-            pdb_content,
-            length,
-            max_iter,
-            method,
-            gpu,
-            alpha,
-            batch_size,
-            db,
-        )
-        return {
-            "message": "Pipeline Started for {} iteration".format(max_iter),
-            "success": "ok",
-        }
-=======
     class_id: Optional[str] = Form(None),
     pdb: Optional[UploadFile] = File(None),
     length: Optional[str] = Form(None),
@@ -76,7 +46,7 @@ async def run_pipeline(
     db: AsyncSession = Depends(get_db),
 ):
     try:
-        if class_id == None or class_id == '1':
+        if class_id == None or class_id == "1":
             pdb_content = await pdb.read()
             bgtask.add_task(
                 dep_pipeline.run_pipeline_loop,
@@ -94,7 +64,7 @@ async def run_pipeline(
                 "message": "Pipeline Started for {} iteration".format(max_iter),
                 "success": "ok",
             }
-        elif class_id == '2':
+        elif class_id == "2":
             bgtask.add_task(
                 dep_pipeline.concat_minibody,
                 heavy,
@@ -107,7 +77,6 @@ async def run_pipeline(
                 "message": "Pipeline Started Multimer",
                 "success": "ok",
             }
->>>>>>> e2c2703 (update)
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e)) from e

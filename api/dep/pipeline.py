@@ -30,11 +30,7 @@ async def get_pipeline_items(db: AsyncSession):
                     "created_at": pipeline.created_at.replace(tzinfo=pytz.UTC)
                     .astimezone(pytz.timezone("Asia/Seoul"))
                     .strftime("%Y-%m-%d %H:%M:%S"),
-<<<<<<< HEAD
-                    "status": pipeline.status
-=======
                     "status": pipeline.status,
->>>>>>> e2c2703 (update)
                 }
                 for pipeline in pipeline_list["result"]
             ],
@@ -44,29 +40,6 @@ async def get_pipeline_items(db: AsyncSession):
 
 
 async def init_new_pipeline(
-<<<<<<< HEAD
-    # sequence: str = Form(...),
-    pdb_name: str,
-    length: str,
-    max_iter: str,
-    method: str,
-    gpu: str | None,
-    alpha: float,
-    batch_size: str | None,
-    db: AsyncSession,
-):
-    item_input = PipelineItem(
-        class_id=1,
-        length=int(length),
-        method_id=int(method),
-        max_iter=int(max_iter),
-        alpha=alpha,
-        gpu=bool(gpu),
-        batch_size=int(batch_size),
-        receptor=pdb_name if pdb_name != None else "none",
-        status="working...",
-    )
-=======
     db: AsyncSession,
     class_id: int | None = None,
     pdb_name: str | None = None,
@@ -97,7 +70,6 @@ async def init_new_pipeline(
         item_input = PipelineItem(
             class_id=class_id, heavy=heavy, light=light, antigen=antigen, name=name
         )
->>>>>>> e2c2703 (update)
     return await crud_pipeline.create_item(db=db, item=item_input)
 
 
@@ -190,9 +162,6 @@ async def run_pipeline_loop(
     dclient = DockModelClient(durl)
 
     pipeline_id = await init_new_pipeline(
-<<<<<<< HEAD
-        pdb_name, length, max_iter, method, gpu, alpha, batch_size, db
-=======
         class_id=1,
         pdb_name=pdb_name,
         length=length,
@@ -202,7 +171,6 @@ async def run_pipeline_loop(
         alpha=alpha,
         batch_size=batch_size,
         db=db,
->>>>>>> e2c2703 (update)
     )
     dir_name = await check_dir_name(pipeline_id, db)
     status_new = await dep_status.init_status(pipeline_id, db)
@@ -280,8 +248,6 @@ async def run_pipeline_loop(
     return await get_pipeline_info(pipeline_id, db)
 
 
-<<<<<<< HEAD
-=======
 async def concat_minibody(
     heavy: str,
     light: str,
@@ -308,6 +274,5 @@ async def concat_minibody(
     )
 
 
->>>>>>> e2c2703 (update)
 async def finish_pipeline_loop(pipeline_id: int, db: AsyncSession):
     return await crud_pipeline.finish_item(pipeline_id, db)

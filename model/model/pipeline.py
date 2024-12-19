@@ -17,14 +17,6 @@ class PipelineItem(Base):
     created_at = Column(
         "created_at", DateTime, server_default=func.now(), nullable=False
     )
-<<<<<<< HEAD
-    # ligand = Column("ligand", String(250), server_default=text("'none'"))
-    receptor = Column("receptor", String(250), server_default=text("'none'"))
-    dir_name = Column("dir_name", String(250), unique=True)
-    status = Column("status", String)
-    # name = Column("name", Integer, index=True)
-    # antigen_id = Column("antigen_id", Integer)
-=======
     heavy = Column("heavy", String(2047))
     light = Column("light", String(2047))
     receptor = Column("receptor", String(250), server_default=text("'none'"))
@@ -32,4 +24,3 @@ class PipelineItem(Base):
     status = Column("status", String)
     name = Column("name", String)
     antigen = Column("antigen", String)
->>>>>>> e2c2703 (update)
